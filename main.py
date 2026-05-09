@@ -6,7 +6,6 @@ import os
 file_list_col = [
     [
         sg.Text("PDF Files:"),
-        # sg.Push(),
         sg.In(expand_x=True,enable_events=True,key="-FILES-"),
         sg.FilesBrowse(file_types=((("PDF", "*.pdf"),)))
     ],
@@ -15,21 +14,10 @@ file_list_col = [
             values=[], enable_events=True, size=(40, 20), expand_x=True, key="-FILE LIST-"
         )
     ],
-    
-    [
-        sg.Text("Output File Destination:", size=(20,1)),
-        # sg.Push(),
-        sg.In(expand_x=True,enable_events=True,key="-OUT DESTINATION-"),
-        sg.FileSaveAs(file_types=((("PDF", "*.pdf"),))),
-    ],
-    [
-        
-        sg.Text("Output File Name:", size=(20,1)),
-        # sg.Push(),
-        sg.In(expand_x=True,enable_events=True,key="-OUT FILE-", disabled=True),
-        # sg.Push(),
 
-        sg.Button("Merge")
+    [
+        sg.Push(),
+        sg.FileSaveAs(file_types=((("PDF", "*.pdf"),)), enable_events=True, key="-SAVE FILE-"),
     ],
 ]
 
@@ -58,8 +46,6 @@ file_list = []
 
 while True:    
     event, values = window.read()
-    # if event:
-    #     print(event)
     if event == "Exit" or event == sg.WIN_CLOSED:
         break
     elif event == "-FILES-":
@@ -81,19 +67,14 @@ while True:
         print(fnames)
         window["-FILE LIST-"].update(fnames)
     
-    elif event == "-OUT DESTINATION-":
-        print(f"Event: -OUT DESTINATION-, Value: {values["-OUT DESTINATION-"]}")
-        window["-OUT FILE-"].update(os.path.basename(values["-OUT DESTINATION-"]))
-        print(values)
-
-    elif event == "Merge":  
+    elif event == "-SAVE FILE-":
         print(values)
         if len(file_list) == 0:
             sg.popup_error(f"No file selected!",title="Error")
             continue
-        elif values["-OUT DESTINATION-"] == "":
+        elif values["-SAVE FILE-"] == "":
             sg.popup_error(f"No output file",title="Error")
 
-        if merge_with_pymupdf(file_list, values["-OUT DESTINATION-"]):
+        if merge_with_pymupdf(file_list, values["-SAVE FILE-"]):
             sg.popup(f"Merge Completed",title="Merge Completed")
-            break
+            
