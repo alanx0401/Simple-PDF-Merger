@@ -17,7 +17,8 @@ file_list_col = [
 
     [
         sg.Push(),
-        sg.FileSaveAs(file_types=((("PDF", "*.pdf"),)), enable_events=True, key="-SAVE FILE-"),
+        sg.In(key="-SAVE FILE-", enable_events=True, visible=False),
+        sg.FileSaveAs(file_types=((("PDF", "*.pdf"),))),
     ],
 ]
 
@@ -74,6 +75,7 @@ while True:
             continue
         elif values["-SAVE FILE-"] == "":
             sg.popup_error(f"No output file",title="Error")
+            continue
 
         if merge_with_pymupdf(file_list, values["-SAVE FILE-"]):
             sg.popup(f"Merge Completed",title="Merge Completed")
