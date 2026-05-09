@@ -8,7 +8,7 @@ file_list_col = [
         sg.Text("PDF Files:"),
         # sg.Push(),
         sg.In(size=(25,1),enable_events=True,key="-FILES-"),
-        sg.FilesBrowse(file_types=(("PDF", "*.pdf")))
+        sg.FilesBrowse(file_types=((("PDF", "*.pdf"),)))
     ],
     [
         sg.Listbox(
@@ -51,6 +51,7 @@ def merge_with_pymupdf(file_list, output_name):
 
     result_pdf.save(f"{output_name}.pdf")
     result_pdf.close()
+    return True
 
 
 file_list = []
@@ -78,6 +79,8 @@ while True:
         print(fnames)
         window["-FILE LIST-"].update(fnames)
     elif event == "Merge":
-        merge_with_pymupdf(file_list, os.path.join(
+        if merge_with_pymupdf(file_list, os.path.join(
             values["-OUT DESTINATION-"],values["-OUT FILE-"]
-        ))
+        )):
+            sg.popup(f"Merge Completed",title="Merge Completed")
+            break
